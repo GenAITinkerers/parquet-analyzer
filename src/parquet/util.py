@@ -5,7 +5,8 @@ This module sets up following:
 """
 
 import logging
-from parquet.config import get_config
+# from parquet.config import get_config
+from config import get_config
 
 CONFIG = get_config()
 

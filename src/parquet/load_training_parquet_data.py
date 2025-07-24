@@ -11,7 +11,8 @@ import json
 import os
 
 # user defined
-from parquet.util import setup_logger
+# from parquet.util import setup_logger
+from util import setup_logger
 
 setup_logger()
 LOGGER = logging.getLogger(__name__)
@@ -67,23 +68,11 @@ def load_training_data(folder_path: Path | str, file_name: str) -> pd.DataFrame:
             LOGGER.warning("The DataFrame contains null values.")
             raise ValueError(f"The file {file_path} contains null values.")
         
-        # Validate expected columns
-        expected_columns = ["column1", "column2", "column3"]  # Replace with actual expected columns
-        missing_columns = [col for col in expected_columns if col not in df.columns]
-        if missing_columns:
-            raise ValueError(f"The file {file_path} is missing expected columns: {missing_columns}")
         
         # Check for duplicate rows
         if df.duplicated().any():
             LOGGER.warning("The DataFrame contains duplicate rows.")
             raise ValueError(f"The file {file_path} contains duplicate rows.")
-        
-        # Save feature names for validation
-        feature_names = df.columns.tolist()
-        feature_file_path = folder_path / "feature_names.json"
-        with open(feature_file_path, "w") as f:
-            json.dump(feature_names, f)
-        LOGGER.info(f"Feature names saved to {feature_file_path}")
         
         LOGGER.info(f"Data loaded successfully with shape {df.shape}")
         return df
@@ -93,3 +82,10 @@ def load_training_data(folder_path: Path | str, file_name: str) -> pd.DataFrame:
     finally:
         if 'df' in locals():
             LOGGER.debug(f"Data loaded from {file_path} with columns: {df.columns.tolist()}")
+
+        
+if __name__ == "__main__":
+    folder_path = "data/processed"
+    file_name = "training_data.parquet"
+    df = load_training_data(folder_path, file_name)
+    print(df.head())
