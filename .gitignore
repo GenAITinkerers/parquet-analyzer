@@ -84,8 +84,8 @@ venv.bak/
 *.env.*
 
 # Parquet or CSV sample files (optional, if you generate/test with these)
-*.parquet
-*.csv
+# *.parquet
+# *.csv
 *.tsv
 *.log
 
