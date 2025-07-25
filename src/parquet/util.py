@@ -19,9 +19,10 @@ def setup_logger():
         style="{",
         handlers=[log_handler],
     )
-    print(f"Setting log level to {CONFIG.LOGLEVEL}")
-    logging.getLogger("anomaly").setLevel(CONFIG.LOGLEVEL)
-    print(f"Logger level set to {CONFIG.LOGLEVEL}")
+    # print(f"Setting log level to {CONFIG.LOGLEVEL}")
+    # logging.getLogger("anomaly").setLevel(CONFIG.LOGLEVEL)
+    logging.getLogger("anomaly").setLevel("DEBUG")
+    # print(f"Logger level set to {CONFIG.LOGLEVEL}")
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.info("Logger setup complete.")

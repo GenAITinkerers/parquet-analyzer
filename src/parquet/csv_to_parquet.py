@@ -27,5 +27,6 @@ if __name__ == "__main__":
     
     csv_to_parquet("data/raw/training_data.csv", "data/processed/training_data.parquet")
 
+    # read or load parquet file to verify creation
     df = pd.read_parquet("data/processed/training_data.parquet")
     print(df.head())

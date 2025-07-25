@@ -66,6 +66,7 @@ def load_parquet_data(folder_path: Path | str, file_name: str) -> pd.DataFrame:
         # check data types
         if not all(df.dtypes == 'float64'):
             LOGGER.warning("The DataFrame does not contain all float64 data types.")
+
         print(f"Parquet data loaded successfully with shape {df.shape}")    
         LOGGER.info(f"Parquet data loaded successfully with shape {df.shape}")
         return df
