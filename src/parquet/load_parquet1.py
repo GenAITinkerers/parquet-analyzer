@@ -2,13 +2,14 @@ import pandas as pd
 import os
 import logging
 from util import setup_logger
+from pathlib import Path
 
 
 
 setup_logger()
 LOGGER = logging.getLogger(__name__)
 
-def load_parquet_data(file_path: str) -> pd.DataFrame:
+def load_parquet_data(folder_path: str, file_name) -> pd.DataFrame:
     """
     Load aggregated data from a Parquet file and return it as a DataFrame.
 
@@ -69,16 +70,17 @@ def load_parquet_data(file_path: str) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # Example usage
-    file_path = "data/processed/training_data.parquet"
-    # df = load_parquet_data(file_path)
-    # print(f"Data loaded successfully with shape {df.shape}")
-
-
-
+    folder_path = "data/processed"
+    file_name = "training_data.parquet"
+    
     try:
-        df = load_parquet_data(file_path)
-    except Exception as exception:
-        LOGGER.debug(f"Error loading data: {exception}")
+        data = load_parquet_data(folder_path, file_name)
+        print(data.head())
+    except Exception as e:
+        LOGGER.error(f"An error occurred while loading data: {e}")
 
 
-    print("application did not stop")
+    print("Current working directory:", Path.cwd())
+    print("Data loaded successfully.")
+    
+    
