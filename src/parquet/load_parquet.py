@@ -64,15 +64,15 @@ def load_parquet_data(folder_path: str, file_name: str) -> pd.DataFrame:
     LOGGER.info(f"Data loaded for training from {file_path} with shape {df.shape}")
     return df
     
-# if __name__ == "__main__":
-#     folder_path = "data/processed"
-#     file_name = "training_data.parquet"
+if __name__ == "__main__":
+    folder_path = "data/processed"
+    file_name = "training_data.parquet"
 
-#     try:
-#         data = load_parquet_data(folder_path, file_name)
-#         LOGGER.info(f"Sample data:\n{data.head()}")
-#         LOGGER.info("Data loaded successfully.")
-#     except Exception as e:
-#         LOGGER.exception("Failed to load data.")
+    try:
+        data = load_parquet_data(folder_path, file_name)
+        LOGGER.info(f"Sample data:\n{data.head()}")
+        LOGGER.info("Data loaded successfully.")
+    except Exception as e:
+        LOGGER.exception("Failed to load data.")
     
-#     LOGGER.info(f"Current working directory: {Path.cwd()}")
+    LOGGER.info(f"Current working directory: {Path.cwd()}")
