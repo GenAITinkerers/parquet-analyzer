@@ -5,28 +5,29 @@ This module sets up following:
 """
 
 import logging
-# from parquet.config import get_config
-from config import get_config
+from parquet.config import get_config
 
 CONFIG = get_config()
 
-def setup_logger():
-    """Setup default logging, call at the start of program."""
-    log_handler = logging.StreamHandler()
-    logging.basicConfig(
-        format="[{asctime},{msecs:03.0f}] {levelname} {name}.{lineno}| {message}",
-        datefmt="%H:%M:%S",
-        style="{",
-        handlers=[log_handler],
-    )
-    # print(f"Setting log level to {CONFIG.LOGLEVEL}")
-    # logging.getLogger("anomaly").setLevel(CONFIG.LOGLEVEL)
-    logging.getLogger("anomaly").setLevel("DEBUG")
-    # print(f"Logger level set to {CONFIG.LOGLEVEL}")
 
-LOGGER = logging.getLogger(__name__)
-LOGGER.info("Logger setup complete.")
-LOGGER.debug("This is a debug message.")
+def setup_logger(name=__name__, level=logging.INFO):
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+
+    # Clear existing handlers
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(name)s -%(lineno)s - %(message)s')
+
+    ch = logging.StreamHandler()
+    ch.setLevel(level)
+    ch.setFormatter(formatter)
+
+    logger.addHandler(ch)
+    return logger
+
+# LOGGER = setup_logger(__name__, logging.INFO)
 
 if __name__ == "__main__":
     from pathlib import Path

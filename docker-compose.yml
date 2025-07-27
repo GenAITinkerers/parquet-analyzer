@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  service1_mean:
+    build:
+      context: .
+      dockerfile: DockerFile
+    command: python parquet/service1_mean.py
+    volumes:
+      - ./data:/app/data
+    working_dir: /app
+
+  service2_median:
+    build:
+      context: .
+      dockerfile: DockerFile
+    command: python parquet/service2_median.py
+    volumes:
+      - ./data:/app/data
+    working_dir: /app

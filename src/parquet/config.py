@@ -74,8 +74,5 @@ if __name__ == "__main__":
     # If this module is run directly, print the configuration
     CONFIG = get_config()
     print("Config loaded successfully.")
-    # Example of accessing configuration parameters
-    print(f"Log Level: {CONFIG.LOGLEVEL}")
-    print(f"Isolation Forest Config: {CONFIG.CONFIG_ISOLATION_FOREST}")
     # print(f"AutoEncoder Config: {CONFIG.CONFIG_AUTO_ENCODER}")
     # You can access other configuration parameters similarly

@@ -1,15 +1,16 @@
 import pandas as pd
 import os
 import logging
-from util import setup_logger
 from pathlib import Path
 
+from parquet.util import setup_logger
 
 
-setup_logger()
-LOGGER = logging.getLogger(__name__)
+# setup_logger()
+# LOGGER = logging.getLogger(__name__)
+LOGGER = setup_logger(__name__, logging.INFO)
 
-def load_parquet_data(folder_path: str, file_name) -> pd.DataFrame:
+def load_parquet_data(folder_path: str, file_name: str) -> pd.DataFrame:
     """
     Load aggregated data from a Parquet file and return it as a DataFrame.
 
@@ -46,11 +47,6 @@ def load_parquet_data(folder_path: str, file_name) -> pd.DataFrame:
         LOGGER.error(f"The file {file_path} is not readable.")
         raise PermissionError(f"The file {file_path} is not readable.")
     
-    # check if the file is not empty
-    if os.stat(file_path).st_size == 0:
-        LOGGER.error(f"The file {file_path} is empty.")
-        raise ValueError(f"The file {file_path} is empty.")
-    
     LOGGER.info(f"File {file_path} exists and is readable. Proceeding with loading data.")
     df = pd.read_parquet(file_path)
 
@@ -67,20 +63,16 @@ def load_parquet_data(folder_path: str, file_name) -> pd.DataFrame:
     
     LOGGER.info(f"Data loaded for training from {file_path} with shape {df.shape}")
     return df
-
-if __name__ == "__main__":
-    # Example usage
-    folder_path = "data/processed"
-    file_name = "training_data.parquet"
     
-    try:
-        data = load_parquet_data(folder_path, file_name)
-        print(data.head())
-    except Exception as e:
-        LOGGER.error(f"An error occurred while loading data: {e}")
+# if __name__ == "__main__":
+#     folder_path = "data/processed"
+#     file_name = "training_data.parquet"
 
-
-    print("Current working directory:", Path.cwd())
-    print("Data loaded successfully.")
+#     try:
+#         data = load_parquet_data(folder_path, file_name)
+#         LOGGER.info(f"Sample data:\n{data.head()}")
+#         LOGGER.info("Data loaded successfully.")
+#     except Exception as e:
+#         LOGGER.exception("Failed to load data.")
     
-    
+#     LOGGER.info(f"Current working directory: {Path.cwd()}")

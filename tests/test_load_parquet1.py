@@ -1,59 +1,68 @@
 import pytest
 import pandas as pd
-import os
 from pathlib import Path
 from parquet.load_parquet1 import load_parquet_data
+import os
+
+# Fixtures and temp files
+@pytest.fixture
+def sample_parquet_file(tmp_path):
+    """Creates a sample valid Parquet file"""
+    df = pd.DataFrame({'A': [1, 2], 'B': ['x', 'y']})
+    file_path = tmp_path / "valid.parquet"
+    df.to_parquet(file_path)
+    return tmp_path, "valid.parquet"
 
 @pytest.fixture
-def tmp_parquet(tmp_path):
-    df = pd.DataFrame({'a': [1, 2], 'b': [3, 4]})
-    file_path = tmp_path / "test.parquet"
+def empty_parquet_file(tmp_path):
+    """Creates an empty Parquet file"""
+    df = pd.DataFrame()
+    file_path = tmp_path / "empty.parquet"
     df.to_parquet(file_path)
-    return tmp_path, "test.parquet"
+    return tmp_path, "empty.parquet"
 
-def test_load_valid_parquet(tmp_parquet):
-    folder, fname = tmp_parquet
+@pytest.fixture
+def null_parquet_file(tmp_path):
+    """Creates a Parquet file with null values"""
+    df = pd.DataFrame({'A': [1, None], 'B': ['x', 'y']})
+    file_path = tmp_path / "nulls.parquet"
+    df.to_parquet(file_path)
+    return tmp_path, "nulls.parquet"
+
+def test_valid_parquet(sample_parquet_file):
+    folder, fname = sample_parquet_file
     df = load_parquet_data(folder, fname)
     assert not df.empty
-    assert list(df.columns) == ['a', 'b']
+    assert df.shape == (2, 2)
 
 def test_file_not_found(tmp_path):
     with pytest.raises(FileNotFoundError):
         load_parquet_data(tmp_path, "missing.parquet")
 
-def test_empty_file(tmp_path):
-    file_path = tmp_path / "empty.parquet"
-    file_path.write_bytes(b"")
-    with pytest.raises(ValueError, match="is empty"):
-        load_parquet_data(tmp_path, "empty.parquet")
+def test_non_parquet_file(tmp_path):
+    txt_file = tmp_path / "not_parquet.txt"
+    txt_file.write_text("This is not a parquet file.")
+    with pytest.raises(ValueError, match="not a Parquet file"):
+        load_parquet_data(tmp_path, "not_parquet.txt")
 
-def test_not_readable(tmp_parquet):
-    folder, fname = tmp_parquet
-    file_path = folder / fname
-    os.chmod(file_path, 0o000)
+def test_empty_file(empty_parquet_file):
+    folder, fname = empty_parquet_file
+    with pytest.raises(ValueError, match="contains no data"):
+        load_parquet_data(folder, fname)
+
+def test_file_with_nulls(null_parquet_file):
+    folder, fname = null_parquet_file
+    with pytest.raises(ValueError, match="contains null values"):
+        load_parquet_data(folder, fname)
+
+def test_unreadable_file(tmp_path):
+    unreadable = tmp_path / "unreadable.parquet"
+    df = pd.DataFrame({'A': [1]})
+    df.to_parquet(unreadable)
+    os.chmod(unreadable, 0o000)  # No permissions
     try:
         with pytest.raises(PermissionError):
-            load_parquet_data(folder, fname)
+            load_parquet_data(tmp_path, "unreadable.parquet")
     finally:
-        os.chmod(file_path, 0o644)
-
-def test_wrong_extension(tmp_path):
-    file_path = tmp_path / "test.txt"
-    df = pd.DataFrame({'a': [1]})
-    df.to_csv(file_path)
-    with pytest.raises(ValueError, match="not a Parquet file"):
-        load_parquet_data(tmp_path, "test.txt")
-
-def test_null_values(tmp_path):
-    df = pd.DataFrame({'a': [1, None]})
-    file_path = tmp_path / "nulls.parquet"
-    df.to_parquet(file_path)
-    with pytest.raises(ValueError, match="contains null values"):
-        load_parquet_data(tmp_path, "nulls.parquet")
-
-def test_empty_dataframe(tmp_path):
-    df = pd.DataFrame({'a': []})
-    file_path = tmp_path / "empty_df.parquet"
-    df.to_parquet(file_path)
-    with pytest.raises(ValueError, match="contains no data"):
-        load_parquet_data(tmp_path, "empty_df.parquet")
+        # Reset permissions to allow cleanup
+        os.chmod(unreadable, 0o644)

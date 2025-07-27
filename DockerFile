@@ -1,0 +1,17 @@
+# Use an official Python image
+FROM python:3.12-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy project files
+COPY src/parquet /app/parquet
+COPY setup.py setup.cfg /app/
+COPY data /app/data
+
+# Install dependencies
+RUN pip install --upgrade pip && \
+    pip install .
+
+# Default command (can be overridden by docker-compose)
+CMD ["python", "parquet/service1_mean.py"]
