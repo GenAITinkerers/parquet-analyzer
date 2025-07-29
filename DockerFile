@@ -15,3 +15,5 @@ RUN pip install --upgrade pip && \
 
 # Default command (can be overridden by docker-compose)
 CMD ["python", "parquet/service1_mean.py"]
+
+

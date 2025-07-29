@@ -10,7 +10,7 @@ from parquet.config import get_config
 CONFIG = get_config()
 
 
-def setup_logger(name=__name__, level=logging.INFO):
+def setup_logger(name=__name__, level=logging.INFO) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(level)
 

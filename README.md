@@ -59,7 +59,8 @@ This project is organized as follows:
 └── README.md
 ```
 
-
+## Project setup
+- choose appropriate python enviornment
 ## Installation
 
 From the project root (where `setup.py` is located):
