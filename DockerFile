@@ -5,15 +5,18 @@ FROM python:3.12-slim
 WORKDIR /app
 
 # Copy project files
-COPY src/parquet /app/parquet
-COPY setup.py setup.cfg /app/
-COPY data /app/data
+COPY src ./src
+COPY setup.py .
+COPY setup.cfg .
+
 
 # Install dependencies
-RUN pip install --upgrade pip && \
-    pip install .
+RUN pip install --upgrade pip
 
-# Default command (can be overridden by docker-compose)
-CMD ["python", "parquet/service1_mean.py"]
+
+RUN pip install -e . 
+
+
+
 
 
