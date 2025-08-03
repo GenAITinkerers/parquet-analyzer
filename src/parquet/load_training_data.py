@@ -16,63 +16,106 @@ from parquet.util import setup_logger
 setup_logger()
 LOGGER = logging.getLogger(__name__)
 
-def load_csv_data(folder_path: Path | str, file_name: str) -> pd.DataFrame:
+def load_csv_data(folder_path: str, file_name: str) -> pd.DataFrame:
     """
-    Load Aggregated data from a CSV file and return it as a DataFrame.
+    Load aggregated data from a CSV file and return it as a DataFrame.
 
     Args:
-        folder_path (Path | str): Path to the folder containing aggregated data.
+        folder_path (Path | str): Path to the folder containing the file.
         file_name (str): Name of the CSV file containing aggregated data.
 
     Returns:
         pd.DataFrame: DataFrame containing the training data.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+        ValueError: If the file is empty, contains null values, or has invalid data.
+        PermissionError: If the file is not readable.
     """
     folder_path = Path(folder_path)
     file_path = folder_path / file_name
-    print(f"Loading data from: {file_path}")
     LOGGER.info(f"Loading data from {file_path}")
-    try:
-        df = pd.read_csv(file_path, parse_dates=True)
-        LOGGER.info(f"Data loaded successfully with shape {df.shape}")
-        return df
-    except Exception as e:
-        LOGGER.error(f"Error loading  data: {e}")
-        raise
 
-def load_parquet_data(folder_path: Path | str, file_name: str) -> pd.DataFrame:
+    # Perform all validation checks before loading the data
+    if not file_path.exists():
+        LOGGER.error(f"The file {file_path} does not exist.")
+        raise FileNotFoundError(f"The file {file_path} does not exist.")
+
+    if file_path.suffix != ".csv":
+        LOGGER.error(f"The file {file_path} is not a CSV file.")
+        raise ValueError(f"The file {file_path} is not a CSV file.")
+
+    if not os.access(file_path, os.R_OK):
+        LOGGER.error(f"The file {file_path} is not readable.")
+        raise PermissionError(f"The file {file_path} is not readable.")
+
+    LOGGER.info(f"File {file_path} exists and is readable. Proceeding with loading data.")
+    df = pd.read_csv(file_path)
+
+    if df.empty:
+        LOGGER.warning("The DataFrame is empty after loading data.")
+        raise ValueError(f"The file {file_path} contains no data.")
+
+    if df.isnull().values.any():
+        LOGGER.warning("The DataFrame contains null values.")
+        raise ValueError(f"The file {file_path} contains null values.")
+
+    LOGGER.info(f"Data loaded for training from {file_path} with shape {df.shape}")
+    return df
+
+def load_parquet_data(folder_path: str, file_name: str) -> pd.DataFrame:
     """
-    Load data from a Parquet file and return it as a DataFrame.
+    Load aggregated data from a Parquet file and return it as a DataFrame.
 
     Args:
-        folder_path (Path | str): Path to the folder containing the Parquet file.
-        file_name (str): Name of the Parquet file.
+        folder_path (Path | str): Path to the folder containing the file.
+        file_name (str): Name of the Parquet file containing aggregated data.
 
     Returns:
-        pd.DataFrame: DataFrame containing the data.
+        pd.DataFrame: DataFrame containing the training data.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+        ValueError: If the file is empty, contains null values, or has invalid data.
+        PermissionError: If the file is not readable.
     """
     folder_path = Path(folder_path)
     file_path = folder_path / file_name
-    print(f"Loading Parquet data from: {file_path}")
-    LOGGER.info(f"Loading Parquet data from {file_path}")
-    try:
-        df = pd.read_parquet(file_path)
-        # check if the DataFrame is empty
-        if df.empty:
-            LOGGER.warning("The DataFrame is empty after loading Parquet data.")
-            raise ValueError("The DataFrame is empty after loading Parquet data.")
-        # check for null values
-        if df.isnull().values.any():
-            LOGGER.warning("The DataFrame contains null values.")
-        # check data types
-        if not all(df.dtypes == 'float64'):
-            LOGGER.warning("The DataFrame does not contain all float64 data types.")
+    LOGGER.info(f"Loading data from {file_path}")
 
-        print(f"Parquet data loaded successfully with shape {df.shape}")    
-        LOGGER.info(f"Parquet data loaded successfully with shape {df.shape}")
-        return df
-    except Exception as e:
-        LOGGER.error(f"Error loading Parquet data: {e}")
-        raise
+
+    # Perform all validation checks before loading the data
+    # check if the file exists
+    if not file_path.exists():
+        LOGGER.error(f"The file {file_path} does not exist.")
+        raise FileNotFoundError(f"The file {file_path} does not exist.")
+    
+    # check if the file is a valid parquet file
+    if file_path.suffix != ".parquet":
+        LOGGER.error(f"The file {file_path} is not a Parquet file.")
+        raise ValueError(f"The file {file_path} is not a Parquet file.")
+    
+    # check if the file is readable
+    if not os.access(file_path, os.R_OK):
+        LOGGER.error(f"The file {file_path} is not readable.")
+        raise PermissionError(f"The file {file_path} is not readable.")
+    
+    LOGGER.info(f"File {file_path} exists and is readable. Proceeding with loading data.")
+    df = pd.read_parquet(file_path)
+
+    # Validate the DataFrame after loading
+    # Check if the DataFrame is empty
+    if df.empty:
+        LOGGER.warning("The DataFrame is empty after loading data.")
+        raise ValueError(f"The file {file_path} contains no data.")
+    
+    # Check for null values
+    if df.isnull().values.any():
+        LOGGER.warning("The DataFrame contains null values.")
+        raise ValueError(f"The file {file_path} contains null values.")
+    
+    LOGGER.info(f"Data loaded for training from {file_path} with shape {df.shape}")
+    return df
 
 if __name__ == "__main__":
     # Example usage for CSV
