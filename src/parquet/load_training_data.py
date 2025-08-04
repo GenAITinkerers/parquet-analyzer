@@ -7,6 +7,7 @@ This read data from from a file in specified folder path and returns it as a pan
 import logging
 import pandas as pd
 from pathlib import Path
+import os
 
 # user defined
 from parquet.util import setup_logger
