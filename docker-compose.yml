@@ -1,20 +1,22 @@
 version: '3.8'
 
 services:
-  service1_mean:
+  # Service to load parquet data
+  load_parquet:
     build:
-      context: .
-      dockerfile: DockerFile
-    command: python parquet/service1_mean.py
+      context: .           # Build Docker image from current directory
+      dockerfile: Dockerfile # Use the Dockerfile in this directory (corrected spelling)
+    command: python src/parquet/load_parquet.py # Command to run for this service
     volumes:
-      - ./data:/app/data
-    working_dir: /app
+      - ./data:/app/data   # Mount local data directory into the container
+    working_dir: /app      # Set working directory inside the container
 
-  service2_median:
+  # Service to compute statistics (e.g., median)
+  load_csv:
     build:
-      context: .
-      dockerfile: DockerFile
-    command: python parquet/service2_median.py
+      context: .           # Build Docker image from current directory
+      dockerfile: Dockerfile # Use the Dockerfile in this directory (corrected spelling)
+    command: python src/parquet/load_csv.py # Command to run for this service
     volumes:
-      - ./data:/app/data
-    working_dir: /app
+      - ./data:/app/data   # Mount local data directory into the container
+    working_dir: /app      # Set working directory inside the container
