@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 from pathlib import Path
-from parquet.load_parquet1 import load_parquet_data
+from parquet.load_parquet import load_parquet_data
 import os
 
 # Fixtures and temp files
