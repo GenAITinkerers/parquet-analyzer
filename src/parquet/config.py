@@ -38,7 +38,25 @@ class ConfigParametersAutoEncoder(BaseModel):
     batch_size: int = 64  # Example default value for batch size
     learning_rate: float = 0.001  # Example default value for learning rate
 
+class ConfigParametersIsolationForest(BaseModel):
+    """
+    This class defines the configuration parameters for Isolation Forest.
+    It can be extended with additional configuration variables as needed.
+    """
+    
+    n_estimators: int = 100  # Default value
+    max_samples: int | float | str = "auto"  # Default value
+    contamination: float | str = 0.01  # Default value
+    max_features: int | float = 1.0  # Default value
 
+    def to_model_dict(self) -> dict:
+        """
+        Convert the configuration parameters to a dictionary.
+        """
+        # Ensure the specified keys exist in the model
+        valid_keys = {"n_estimators", "max_samples", "contamination", "max_features"}
+        existing_keys = valid_keys.intersection(self.__fields__.keys())  # Check against model fields
+        return self.dict(include=existing_keys)
 
 class Config(BaseSettings):
     """
@@ -50,6 +68,9 @@ class Config(BaseSettings):
     # Define class variables with default values and types
     LOGLEVEL: str = "INFO"
     CONFIG_AUTO_ENCODER: ConfigParametersAutoEncoder = ConfigParametersAutoEncoder()
+    CONFIG_ISOLATION_FOREST: ConfigParametersIsolationForest = ConfigParametersIsolationForest()
+
+
 
 
     # Additional configuration variables can be added here

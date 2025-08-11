@@ -1,0 +1,9 @@
+{
+    "LOGLEVEL": "DEBUG",
+    "CONFIG_ISOLATION_FOREST": {
+        "n_estimators": 200,
+        "max_samples": "auto",
+        "contamination": 0.05,
+        "max_features": 1.0
+    }
+}

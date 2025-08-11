@@ -75,6 +75,13 @@ python setup.py bdist_wheel
 pip install dist/*.whl
 ```
 
+
+## How to Run:
+- copy testenv from test folder. Rename it as `.env`.
+- If you wish to use config.py from your local project, add this `.env` two level up config.py so that according to definition in config.py, the config parameters are read from this location.
+- If you wish to use config.py from project installed as package, add this `.env` two level up config.py in installed package location so that accroding to definion in config.py and call to this config.py, the config paramets are read from this location in package
+
+
 # Unit Test
 Run all unit tests with coverage:
 ```sh

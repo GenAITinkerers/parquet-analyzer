@@ -2,6 +2,11 @@ from parquet.load_parquet import load_parquet_data
 import os
 import pandas as pd
 
+# from parquet.config import get_config
+from config import get_config
+
+CONFIG = get_config()
+CONFIG_AUTO_ENCODER = CONFIG.CONFIG_AUTO_ENCODER
 
 # Load the Parquet file and compute statistics
 
