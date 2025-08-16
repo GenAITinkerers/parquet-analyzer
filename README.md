@@ -69,7 +69,11 @@ From the project root (where `setup.py` is located):
 pip install -U setuptools setuptools_scm wheel
 ```
 ```sh
-python setup.py bdist_wheel
+# python setup.py bdist_wheel
+# this will be deprecated
+pip install build
+python -m build
+pip install dist/*.whl
 ```
 ```sh
 pip install dist/*.whl

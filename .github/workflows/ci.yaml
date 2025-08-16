@@ -28,7 +28,8 @@ jobs:
 
       - name: Build and install package
         run: |
-          python setup.py bdist_wheel
+          pip install build
+          python -m build
           pip install dist/*.whl
 
       # - name: Lint with flake8
