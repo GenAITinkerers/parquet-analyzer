@@ -33,13 +33,14 @@ class ConfigParametersAutoEncoder(BaseModel):
     This class defines the configuration parameters for Autoencoder.
     It can be extended with additional configuration variables as needed.
     """
-    
+
     # Define Autoencoder specific parameters here
     input_dim: int = 784  # Example default value for input dimension
     encoding_dim: int = 32  # Example default value for encoding dimension
     epochs: int = 50  # Example default value for number of training epochs
     batch_size: int = 64  # Example default value for batch size
     learning_rate: float = 0.001  # Example default value for learning rate
+
 
 class ConfigParametersIsolationForest(BaseModel):
     """
