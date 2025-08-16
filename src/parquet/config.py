@@ -1,14 +1,17 @@
 """
 This module defines the configuration for the anomaly detection package.
-It uses Pydantic to manage configuration parameters and reads from environment files.
-Keep the environment variables in a file named `.envjson` or `.env` in the parent directory.
-This file is used to define configuration parameters for the anomaly detection package.
-It includes parameters for the Isolation Forest algorithm and can be extended with additional configuration variables as needed.
+It uses Pydantic to manage configuration parameters and reads from environment
+files. Keep the environment variables in a file named `.envjson` or `.env`
+in the parent directory. This file is used to define configuration parameters
+for the anomaly detection package. It includes parameters for the Isolation
+Forest algorithm and can be extended with additional configuration 
+variables as needed.
 
 create instance of Config class to access configuration parameters.
 execute `get_config()` to load the configuration from environment variables.
-The git_config function caches the configuration to avoid reloading it multiple times.
-This uses caching to ensure that the configuration is loaded only once, improving performance.
+The git_config function caches the configuration to avoid reloading 
+it multiple times. This uses caching to ensure that the configuration
+is loaded only once, improving performance.
 the same instance of Config is returned every time get_config() is called.
 """
 
