@@ -37,6 +37,7 @@ def load_csv_data(folder_path: str, file_name: str) -> pd.DataFrame:
         LOGGER.error(f"The file {file_path} does not exist.")
         raise FileNotFoundError(f"The file {file_path} does not exist.")
 
+
     if file_path.suffix != ".csv":
         LOGGER.error(f"The file {file_path} is not a CSV file.")
         raise ValueError(f"The file {file_path} is not a CSV file.")
